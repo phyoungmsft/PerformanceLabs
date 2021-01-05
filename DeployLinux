@@ -1,0 +1,107 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "extensions_CustomScript_storageAccountName": {
+            "type": "SecureString"
+        },
+        "extensions_CustomScript_storageAccountKey": {
+            "type": "SecureString"
+        },
+        "extensions_CustomScript_commandToExecute": {
+            "type": "SecureString"
+        },
+        "virtualMachines_ubuntu_name": {
+            "defaultValue": "ubuntu",
+            "type": "String"
+        },
+        "disks_ubuntu_OsDisk_1_0fc345a089a14a50b8e51d24cbc00047_externalid": {
+            "defaultValue": "/subscriptions/a6b332e0-bb36-4ce8-b692-fdb6ee0bc272/resourceGroups/redhatperformance_group/providers/Microsoft.Compute/disks/ubuntu_OsDisk_1_0fc345a089a14a50b8e51d24cbc00047",
+            "type": "String"
+        },
+        "networkInterfaces_ubuntu776_externalid": {
+            "defaultValue": "/subscriptions/a6b332e0-bb36-4ce8-b692-fdb6ee0bc272/resourceGroups/redhatperformance_group/providers/Microsoft.Network/networkInterfaces/ubuntu776",
+            "type": "String"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.Compute/virtualMachines",
+            "apiVersion": "2019-07-01",
+            "name": "[parameters('virtualMachines_ubuntu_name')]",
+            "location": "southcentralus",
+            "properties": {
+                "hardwareProfile": {
+                    "vmSize": "Standard_D2s_v3"
+                },
+                "storageProfile": {
+                    "imageReference": {
+                        "publisher": "Canonical",
+                        "offer": "UbuntuServer",
+                        "sku": "18.04-LTS",
+                        "version": "latest"
+                    },
+                    "osDisk": {
+                        "osType": "Linux",
+                        "name": "[concat(parameters('virtualMachines_ubuntu_name'), '_OsDisk_1_0fc345a089a14a50b8e51d24cbc00047')]",
+                        "createOption": "FromImage",
+                        "caching": "ReadWrite",
+                        "managedDisk": {
+                            "id": "[parameters('disks_ubuntu_OsDisk_1_0fc345a089a14a50b8e51d24cbc00047_externalid')]"
+                        }
+                    },
+                    "dataDisks": []
+                },
+                "osProfile": {
+                    "computerName": "[parameters('virtualMachines_ubuntu_name')]",
+                    "adminUsername": "pyoung",
+                    "linuxConfiguration": {
+                        "disablePasswordAuthentication": false,
+                        "provisionVMAgent": true
+                    },
+                    "secrets": [],
+                    "allowExtensionOperations": true,
+                    "requireGuestProvisionSignal": true
+                },
+                "networkProfile": {
+                    "networkInterfaces": [
+                        {
+                            "id": "[parameters('networkInterfaces_ubuntu776_externalid')]"
+                        }
+                    ]
+                },
+                "diagnosticsProfile": {
+                    "bootDiagnostics": {
+                        "enabled": true
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Compute/virtualMachines/extensions",
+            "apiVersion": "2019-07-01",
+            "name": "[concat(parameters('virtualMachines_ubuntu_name'), '/CustomScript')]",
+            "location": "southcentralus",
+            "dependsOn": [
+                "[resourceId('Microsoft.Compute/virtualMachines', parameters('virtualMachines_ubuntu_name'))]"
+            ],
+            "properties": {
+                "autoUpgradeMinorVersion": true,
+                "publisher": "Microsoft.Azure.Extensions",
+                "type": "CustomScript",
+                "typeHandlerVersion": "2.0",
+                "settings": {
+                    "fileUris": [
+                        "https://bigtestdiag.blob.core.windows.net/performancelab/installstress.sh?sp=r&se=2020-12-22T04:49:03Z&sv=2019-12-12&sr=b&sig=t3o5XnPD37fA89o0rnitkX6w4iQaEYffIZYkXqGlQYQ%3D"
+                    ]
+                },
+                "protectedSettings": {
+                    "storageAccountName": "[parameters('extensions_CustomScript_storageAccountName')]",
+                    "storageAccountKey": "[parameters('extensions_CustomScript_storageAccountKey')]",
+                    "commandToExecute": "[parameters('extensions_CustomScript_commandToExecute')]"
+                }
+            }
+        }
+    ]
+}
