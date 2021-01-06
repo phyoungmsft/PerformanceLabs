@@ -221,7 +221,7 @@
             "offer": "[variables('WindowsImageOffer')]",
             "sku": "[parameters('windowsOSVersion')]",
             "version": "latest"
-          },
+          }
         },
         "networkProfile": {
           "networkInterfaces": [
@@ -271,7 +271,7 @@
                         "offer": "[variables('imageOffer')]",
                         "sku": "[variables('imageSku')]",
                         "version": "latest"
-                    },
+                    }
                 },
                 "networkProfile": {
                     "networkInterfaces": [
