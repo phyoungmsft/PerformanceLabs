@@ -55,19 +55,6 @@
         "description": "The virtual machine size. Enter a Premium capable VM size if DiskType is entered as Premium_LRS"
       }
     },
-    "windowsOSVersion": {
-      "type": "string",
-      "defaultValue": "2016-Datacenter",
-      "allowedValues": [
-        "2008-R2-SP1",
-        "2012-Datacenter",
-        "2012-R2-Datacenter",
-        "2016-Datacenter"
-      ],
-      "metadata": {
-        "description": "The Windows version for the VM."
-      }
-    },
     "location": {
       "type": "string",
       "defaultValue": "[resourceGroup().location]",
@@ -84,6 +71,7 @@
     "subnetName":"PerfTest-subnet",
     "WindowsImagePublisher": "MicrosoftWindowsServer",
     "WindowsImageOffer": "WindowsServer",
+    "windowsOSVersion": "2016-Datacenter",
 	"imagePublisher": "RedHat",
     "imageOffer": "RHEL",
     "imageSku": "7.2",
