@@ -1,0 +1,22 @@
+To change the Windows OS Type for a image reference deployment, remove the WindowsOSVersion
+
+"windowsOSVersion": {
+      "type": "string",
+      "defaultValue": "2016-Datacenter",
+      "allowedValues": [
+        "2008-R2-SP1",
+        "2012-Datacenter",
+        "2012-R2-Datacenter",
+        "2016-Datacenter"
+      ],
+      
+Then under OSDiskProfile replace the image reference with the approriate one such as below:
+
+"imageReference": {
+                        "id": "/subscriptions/a6b332e0-bb36-4ce8-b692-fdb6ee0bc272/resourceGroups/redhatperformance_group/providers/Microsoft.Compute/images/redhatperfImage2"
+                    }
+                },
+                
+                
+                
+                
